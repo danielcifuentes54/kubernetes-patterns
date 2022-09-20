@@ -25,7 +25,7 @@ spec:
     - name: sidecar-refresh
       image: alpine/git
       command: ["/bin/sh","-c"]
-      args: ["watch -n 30 git pull && cp 02-sidecar/index.html /usr/share/nginx/html"]
+      args: ["watch -n 30 'git pull && cp 02-sidecar/index.html /usr/share/nginx/html'"]
       workingDir: /usr/share/nginx/html/kubernetes-patterns
       volumeMounts:
         - name: web
