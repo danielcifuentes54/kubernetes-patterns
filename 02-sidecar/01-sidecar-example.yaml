@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: sidecar
+  name: website
+spec:
+  initContainers:
+    - name: clone-repo
+      image: alpine/git
+      command: ["/bin/sh","-c"]
+      args: ["git clone --progress https://github.com/danielcifuentes54/kubernetes-patterns.git /usr/share/nginx/html/kubernetes-patterns ; cp /usr/share/nginx/html/kubernetes-patterns/01-init-containers/index.html /usr/share/nginx/html"]
+      volumeMounts:
+        - name: web
+          mountPath: '/usr/share/nginx/html'
+  containers:
+    - name: nginx
+      image: nginx
+      ports:
+        - name: http
+          containerPort: 80
+      volumeMounts:
+        - name: web
+          mountPath: '/usr/share/nginx/html'
+    - name: sidecar-refresh
+      image: alpine/git
+      command: ["/bin/sh","-c"]
+      args: ["watch -n 60 git pull && cp 01-init-containers/index.html /usr/share/nginx/html"]
+      workingDir: /usr/share/nginx/html/kubernetes-patterns
+      volumeMounts:
+        - name: web
+          mountPath: '/usr/share/nginx/html'
+  volumes:
+    - name: web
+      emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sidecar-service
+spec:
+  ports:
+  - name: 80-80
+    nodePort: 30001
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: sidecar
+  type: NodePort
