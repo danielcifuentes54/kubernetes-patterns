@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   labels:
     app: sidecar
-  name: website
+  name: sidecar
 spec:
   initContainers:
     - name: clone-repo
@@ -25,7 +25,7 @@ spec:
     - name: sidecar-refresh
       image: alpine/git
       command: ["/bin/sh","-c"]
-      args: ["watch -n 60 git pull && cp 01-init-containers/index.html /usr/share/nginx/html"]
+      args: ["watch -n 30 git pull && cp 01-init-containers/index.html /usr/share/nginx/html"]
       workingDir: /usr/share/nginx/html/kubernetes-patterns
       volumeMounts:
         - name: web
