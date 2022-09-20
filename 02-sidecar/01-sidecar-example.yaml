@@ -9,7 +9,7 @@ spec:
     - name: clone-repo
       image: alpine/git
       command: ["/bin/sh","-c"]
-      args: ["git clone --progress https://github.com/danielcifuentes54/kubernetes-patterns.git /usr/share/nginx/html/kubernetes-patterns ; cp /usr/share/nginx/html/kubernetes-patterns/01-init-containers/index.html /usr/share/nginx/html"]
+      args: ["git clone --progress https://github.com/danielcifuentes54/kubernetes-patterns.git /usr/share/nginx/html/kubernetes-patterns ; cp /usr/share/nginx/html/kubernetes-patterns/02-sidecar/index.html /usr/share/nginx/html"]
       volumeMounts:
         - name: web
           mountPath: '/usr/share/nginx/html'
@@ -25,7 +25,7 @@ spec:
     - name: sidecar-refresh
       image: alpine/git
       command: ["/bin/sh","-c"]
-      args: ["watch -n 30 git pull && cp 01-init-containers/index.html /usr/share/nginx/html"]
+      args: ["watch -n 30 git pull && cp 02-sidecar/index.html /usr/share/nginx/html"]
       workingDir: /usr/share/nginx/html/kubernetes-patterns
       volumeMounts:
         - name: web
