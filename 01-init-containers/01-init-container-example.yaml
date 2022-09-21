@@ -8,12 +8,8 @@ spec:
   initContainers:
     - name: clone-repo
       image: alpine/git
-      command:
-        - git
-        - clone
-        - --progress
-        - https://github.com/danielcifuentes54/kubernetes-patterns.git
-        - /tmp && cp /tmp/kubernetes-patterns/01-init-containers/index.html usr/share/nginx/html 
+      command: ["/bin/sh","-c"]
+      args: ["git clone --progress https://github.com/danielcifuentes54/kubernetes-patterns.git /tmp/kubernetes-patterns ; cp /tmp/kubernetes-patterns/01-init-containers/index.html /usr/share/nginx/html"]
       volumeMounts:
         - name: web
           mountPath: '/usr/share/nginx/html'
